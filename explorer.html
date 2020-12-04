@@ -8,16 +8,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-<meta name="twitter:card" content="summary_large_image">
+<!-- <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@qi2peng2">
     <meta name="twitter:creator" content="@qi2peng2">
     <meta name="twitter:title" content="HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering">
     <meta name="twitter:description" content="Explore HotpotQA">
     <meta name="twitter:image" content="https://hotpotqa.github.io/img/explorer-bg.jpg">
-    <meta property="og:image" content="https://hotpotqa.github.io/img/explorer-bg.jpg">
+    <meta property="og:image" content="https://hotpotqa.github.io/img/explorer-bg.jpg"> -->
 
 
-    <title>HotpotQA Homepage</title>
+    <title>DirTY Homepage</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -31,22 +31,23 @@
     <!-- Custom styles for this template -->
     <link href="css/clean-blog.min.css" rel="stylesheet">
     <link href="css/hotpotqa.css" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/highlight/tomorrow-night-eighties.css">
     
   </head>
 
   <body>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
   <div class="container">
-    <a class="navbar-brand" href="index.html">HotpotQA</a>
+    <a class="navbar-brand" href="index.html">DirTY</a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       Menu
       <i class="fa fa-bars"></i>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="blog.html">Blog</a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link" href="explorer.html">Explorer</a>
         </li>
@@ -61,8 +62,8 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <div class="site-heading">
-          <h1>Explore HotpotQA</h1>
-          <span class="subheading">A Dataset for Diverse, Explainable <span class="line">Multi-hop</span> <span class="line">Question Answering</span></span>
+          <h1>Explore DirT</h1>
+          <span class="subheading">A Dataset for Decompiled identiﬁer re-TYping (name is just for fun)</span>
         </div>
       </div>
     </div>
@@ -73,19 +74,19 @@
 <div class="container">
 <div class="row" style="margin-bottom: 10px">
 <div class="col-lg-8 col-md-10 mx-auto">
-Here we show a random example from the HotpotQA dev set. Feel free to use the in-browser controls to show/hide supporting facts and/or the answer to see if you can predict them!
+Here we show a random example from the DirTY dev set. Feel free to use the in-browser controls to show/hide the answer to see if you can predict them!
 </div>
 </div>
 <div class="row" style="margin-bottom: 10px">
 <div class="col-lg-8 col-md-10 mx-auto">
 <div class="form-check-inline">
-  <input class="form-check-input" type="checkbox" value="" id="show_supfacts" checked>
-  <label class="form-check-label" for="show_supfacts">
-    Show supporting facts
+  <input class="form-check-input" type="checkbox" value="" id="show_meta" checked>
+  <label class="form-check-label" for="show_meta">
+    Show meta
   </label>
 </div>
 <div class="form-check-inline">
-  <input class="form-check-input" type="checkbox" value="" id="show_answer" checked>
+  <input class="form-check-input" type="checkbox" value="" id="show_answer">
   <label class="form-check-label" for="show_answer">
     Show answer
   </label>
@@ -97,19 +98,20 @@ Here we show a random example from the HotpotQA dev set. Feel free to use the in
 <div class="col-lg-8 col-md-10 mx-auto">
 <div id="data-example">
 <div class="data-paragraph" id="doc_a">
-  <div class="paragraph-title" id="title_a">
+  <div class="paragraph-title" id="var">
   </div>
-  <div class="paragraph" id="para_a">
+  <div class="paragraph" id="meta">
+  </div>
+  <br/>
+  <div class="code" id="code_s">
+  </div>
+  <div class="code" id="code_t">
+  </div>
+  <div class="code" id="objdump">
   </div>
 </div>
-<div class="data-paragraph" id="doc_b">
-  <div class="paragraph-title" id="title_b">
-  </div>
-  <div class="paragraph" id="para_b">
-  </div>
-</div>
-<div class="data-question" id="question"></div>
-<div class="data-answer" id="answer"></div>
+<!-- <div class="data-question" id="question"></div>
+<div class="data-answer" id="answer"></div> -->
 </div>
 </div>
 </div>
@@ -121,8 +123,8 @@ Here we show a random example from the HotpotQA dev set. Feel free to use the in
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
-            <p class="copyright text-muted">Copyright &copy; HotpotQA Team, 2018-2019.</p>
-            <p class="copyright text-muted">Theme adapted from Start Bootstrap's <a href="https://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> template.</p>
+            <p class="copyright text-muted">Copyright &copy; STRUDEL Team, 2020-2021.</p>
+            <p class="copyright text-muted">Theme adapted from HotpotQA's <a href="https://github.com/hotpotqa/hotpotqa.github.io">fork</a> of Start Bootstrap's <a href="https://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> template.</p>
           </div>
         </div>
       </div>
@@ -134,42 +136,66 @@ Here we show a random example from the HotpotQA dev set. Feel free to use the in
 
     <!-- Custom scripts for this template -->
     <script src="js/clean-blog.min.js"></script>
+
+    <script src="/vendor/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
     
 <script>
 var examples;
 
-function showParagraph(id, example) {
-  var paragraph = example['para_' + id];
-  var output = ""
-  for (var i = 0; i < paragraph.length; i++) {
-    if (example['supporting_facts'][id.charCodeAt(0) - 'a'.charCodeAt(0)].indexOf(i) > -1) {
-      classes = "supfact"
-      if (!$("#show_supfacts")[0].checked)
-        classes += " hide"
-      output += "<span class='" + classes + "'>" + paragraph[i] + "</span>";
-    } else
-      output += paragraph[i];
+function showCode(id, example) {
+  var paragraph = example['code_' + id];
+  $("#code_"+id).html(paragraph);
+}
+
+function showTable(example) {
+  var vars = example['var'];
+  html = '<thead class="thead-light"><tr><th class="align-middle">Variable</th><th class="align-middle">Pred Type</th><th class="align-middle">Ref Name</th><th class="align-middle">Ref Type</th></tr></thead>'
+  classes = "ref"
+  if (!$("#show_answer")[0].checked)
+    classes += " hide"
+  for (var i = 0; i < vars.length; i++) {
+    var tr = "<tr>";
+    tr += "<td><code>" + vars[i].name + "</code></td>" + "<td><code>" + vars[i].type + "</code></td>"+ "<td><code>" + "<span class='" + classes + "'>" + vars[i].ref_name + "</span>" + "</code></td>" + "<td><code>" + "<span class='" + classes + "'>" + vars[i].ref_type + "</span>" + "</code></td>" + "</tr>";
+    html += tr;
   }
-  $("#para_"+id).html(output);
-  $("#title_"+id).html("<em>Paragraph " + id.toUpperCase() + ":</em> " + example['title_'+id]);
+  $("#var").html(html);
+}
+
+function showMeta(example) {
+  $("#meta").text("body_in_train: " + example['body_in_train'] + ",\nrepo_owner: " + example["repo_owner"] + ",\nrepo_name: " + example["repo_name"] + ",\npath_in_repo: " + example["path_in_repo"] + "\n");
+}
+
+function showDump(example) {
+  $("#objdump").text(example["objdump"]);
 }
 
 function showRandomExample() {
   var id = Math.floor(Math.random() * examples.length);
   var example = examples[id];
-  showParagraph('a', example)
-  showParagraph('b', example)
-  $('#question').html("<strong>Q:</strong> " + example['question'])
-  $('#answer').html("<strong>A:</strong> " + example['answer'])
+  showTable(example);
+  showMeta(example);
+  showCode('s', example);
+  showCode('t', example);
+  showDump(example);
+  document.querySelectorAll('pre code').forEach((block) => {
+    hljs.highlightBlock(block);
+  });
+  // $('#question').html("<strong>Q:</strong> " + example['question'])
+  // $('#answer').html("<strong>A:</strong> " + example['answer'])
 }
 
 $(function(){
-  $.getJSON('js/camera_ready_nd8_dev_sample100.json', function(data) {
+  $.getJSON('js/results.json', function(data) {
     examples = data;
     showRandomExample();
-  })
-  $("#show_answer").click(function(){$("#answer").slideToggle(200)});
-  $("#show_supfacts").click(function(){$("span.supfact").toggleClass("hide")});
+  });
+  $("#code_s").wrap("<pre><code></code></pre>")
+  $("#code_t").wrap("<pre><code></code></pre>")
+  $("#objdump").wrap("<pre><code></code></pre>")
+  $("#var").wrap("<table class='table table-responsive'><tbody></tbody></table>")
+  $("#show_answer").click(function(){$("span.ref").toggleClass("hide")});
+  $("#show_meta").click(function(){$("#meta").slideToggle(200)});
   $("#another_example").click(function(){$("#data-example").fadeOut(100, function(){showRandomExample(); $("#data-example").fadeIn(100);});})
 })
 </script>
