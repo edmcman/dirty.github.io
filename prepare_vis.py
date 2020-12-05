@@ -83,24 +83,27 @@ def tokenize_raw_code(raw_code):
 
     return tokens
 
-def get_preprocessed_code(func, preprocessed_path):
+def get_preprocessed_code(func, pred, ref, preprocessed_path, only_struct=False):
     binary, func_name = func
     with open(os.path.join(preprocessed_path, f"{binary}_{binary}.jsonl")) as f:
         for line in f:
             json_line = json.loads(line)
             if json_line["name"] == func_name:
-                code = " ".join(json_line["code_tokens"])
+                varnames = set(name for (name, _), (_, typ, _) in zip(pred[binary][func_name], ref[binary][func_name]) if not only_struct or typ.startswith("struc"))
+                code = json_line["code_tokens"]
+                code = map(lambda x: x[2:-2] if x.startswith("@@") and x not in varnames else x, code)
+                code = " ".join(code)
                 return highlight_var(format_code(prepare_highlight_var(code)))
     return ""
 
-def get_debug_code(func, ref, ida_output_path):
+def get_debug_code(func, ref, ida_output_path, only_struct=False):
     binary, func_name = func
     with gzip.open(os.path.join(ida_output_path, f"{binary}_{binary}.jsonl.gz"), "rt") as f:
         for line in f:
             json_line = json.loads(line)
             if json_line["b"]["n"] == func_name:
                 code = tokenize_raw_code(json_line["b"]["c"])
-                varnames = set(name[2:-2] for name, _, _ in ref[binary][func_name])
+                varnames = set(name[2:-2] for name, typ, _ in ref[binary][func_name] if not only_struct or typ.startswith("struc"))
                 code = map(lambda x: f"@@{x}@@" if x in varnames else x, code)
                 code = " ".join(code)
                 return highlight_var(format_code(prepare_highlight_var(code)))
@@ -110,8 +113,8 @@ def get_debug_code(func, ref, ida_output_path):
 def main(args):
     func, meta, bins_path, ida_output_path, preprocessed_path, pred, ref, only_struct = args
     info = get_binary_info(func, meta, bins_path)
-    info["code_s"] = get_preprocessed_code(func, preprocessed_path)
-    info["code_t"] = get_debug_code(func, ref, ida_output_path)
+    info["code_s"] = get_preprocessed_code(func, pred, ref, preprocessed_path, only_struct)
+    info["code_t"] = get_debug_code(func, ref, ida_output_path, only_struct)
     info["var"] = []
     binary, func_name = func
     for (src_name, src_type), (tgt_name, tgt_type, body_in_train) in zip(pred[binary][func_name], ref[binary][func_name]):
