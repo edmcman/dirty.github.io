@@ -190,11 +190,11 @@ $(function(){
     examples = data;
     showRandomExample();
   });
-  $("#code_s").wrap("<pre><code></code></pre>")
-  $("#code_t").wrap("<pre><code></code></pre>")
-  $("#objdump").wrap("<pre><code></code></pre>")
+  $("#code_s").before("<div class='paragraph'><strong>Model input: </strong>Decompiled</div>").wrap("<pre><code></code></pre>")
+  $("#code_t").before("<div class='paragraph'><strong>Reference: </strong>Debug</div>").wrap("<pre><code></code></pre>").hide();
+  $("#objdump").before("<div class='paragraph'><strong>Binary: </strong>objdump</div>").wrap("<pre><code></code></pre>")
   $("#var").wrap("<table class='table table-responsive'><tbody></tbody></table>")
-  $("#show_answer").click(function(){$("span.ref").toggleClass("hide")});
+  $("#show_answer").click(function(){$("span.ref").toggleClass("hide"); $("#code_t").slideToggle(200)});
   $("#show_meta").click(function(){$("#meta").slideToggle(200)});
   $("#another_example").click(function(){$("#data-example").fadeOut(100, function(){showRandomExample(); $("#data-example").fadeIn(100);});})
 })
