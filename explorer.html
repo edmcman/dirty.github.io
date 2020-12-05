@@ -88,7 +88,19 @@ Here we show a random example from the DirTY dev set. Feel free to use the in-br
 <div class="form-check-inline">
   <input class="form-check-input" type="checkbox" value="" id="show_answer">
   <label class="form-check-label" for="show_answer">
-    Show answer
+    Show reference
+  </label>
+</div>
+<div class="form-check-inline">
+  <input class="form-check-input" type="checkbox" value="" id="only_not_train">
+  <label class="form-check-label" for="only_not_train">
+    Only body-not-in-train
+  </label>
+</div>
+<div class="form-check-inline">
+  <input class="form-check-input" type="checkbox" value="" id="only_struct">
+  <label class="form-check-label" for="only_struct">
+    Only structs
   </label>
 </div>
 <button type="button" class="btn btn-success" id="another_example">Show another example</button>
@@ -185,6 +197,16 @@ function showRandomExample() {
   // $('#answer').html("<strong>A:</strong> " + example['answer'])
 }
 
+function getResultName() {
+  name = "js/results";
+  if ($("#only_struct")[0].checked)
+    name += "-struct";
+  if ($("#only_not_train")[0].checked)
+    name += "-notrain";
+  name += ".json";
+  return name
+}
+
 $(function(){
   $.getJSON('js/results.json', function(data) {
     examples = data;
@@ -197,6 +219,14 @@ $(function(){
   $("#show_answer").click(function(){$("span.ref").toggleClass("hide"); $("#code_t").slideToggle(200)});
   $("#show_meta").click(function(){$("#meta").slideToggle(200)});
   $("#another_example").click(function(){$("#data-example").fadeOut(100, function(){showRandomExample(); $("#data-example").fadeIn(100);});})
+  refetch = function() {
+    $.getJSON(getResultName(), function(data) {
+      examples = data;
+      showRandomExample();
+    });
+  };
+  $("#only_struct").click(refetch);
+  $("#only_not_train").click(refetch);
 })
 </script>
 
