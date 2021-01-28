@@ -162,13 +162,13 @@ function showCode(id, example) {
 
 function showTable(example) {
   var vars = example['var'];
-  html = '<thead class="thead-light"><tr><th class="align-middle">Variable</th><th class="align-middle">Pred Type</th><th class="align-middle">Ref Name</th><th class="align-middle">Ref Type</th></tr></thead>'
+  html = '<thead class="thead-light"><tr><th class="align-middle">Variable</th><th class="align-middle">Pred Type</th><th class="align-middle">Pred Name</th><th class="align-middle">Ref Name</th><th class="align-middle">Ref Type</th></tr></thead>'
   classes = "ref"
   if (!$("#show_answer")[0].checked)
     classes += " hide"
   for (var i = 0; i < vars.length; i++) {
     var tr = "<tr>";
-    tr += "<td><code>" + vars[i].name + "</code></td>" + "<td><code>" + vars[i].type + "</code></td>"+ "<td><code>" + "<span class='" + classes + "'>" + vars[i].ref_name + "</span>" + "</code></td>" + "<td><code>" + "<span class='" + classes + "'>" + vars[i].ref_type + "</span>" + "</code></td>" + "</tr>";
+    tr += "<td><code>" + vars[i].name + "</code></td>" + "<td><code>" + vars[i].type + "</code></td>"+ "<td><code>" + vars[i].pred_name + "</code></td>" + "<td><code>" + "<span class='" + classes + "'>" + vars[i].ref_name + "</span>" + "</code></td>" + "<td><code>" + "<span class='" + classes + "'>" + vars[i].ref_type + "</span>" + "</code></td>" + "</tr>";
     html += tr;
   }
   $("#var").html(html);

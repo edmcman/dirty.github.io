@@ -89,7 +89,7 @@ def get_preprocessed_code(func, pred, ref, preprocessed_path, only_struct=False)
         for line in f:
             json_line = json.loads(line)
             if json_line["name"] == func_name:
-                varnames = set(name for (name, _), (_, typ, _) in zip(pred[binary][func_name], ref[binary][func_name]) if not only_struct or typ.startswith("struc"))
+                varnames = set(name for name in pred[binary][func_name] if not only_struct or ref[binary][func_name][name][1].startswith("struc"))
                 code = json_line["code_tokens"]
                 code = map(lambda x: x[2:-2] if x.startswith("@@") and x not in varnames else x, code)
                 code = " ".join(code)
@@ -114,13 +114,15 @@ def main(args):
     func, meta, bins_path, ida_output_path, preprocessed_path, pred, ref, only_struct = args
     info = get_binary_info(func, meta, bins_path)
     info["code_s"] = get_preprocessed_code(func, pred, ref, preprocessed_path, only_struct)
-    info["code_t"] = get_debug_code(func, ref, ida_output_path, only_struct)
+    # info["code_t"] = get_debug_code(func, ref, ida_output_path, only_struct)
+    info["code_t"] = ""
     info["var"] = []
     binary, func_name = func
-    for (src_name, src_type), (tgt_name, tgt_type, body_in_train) in zip(pred[binary][func_name], ref[binary][func_name]):
+    for src_name in pred[binary][func_name]:
+        (src_type, src_name_pred), (tgt_name, tgt_type, body_in_train) = pred[binary][func_name][src_name], ref[binary][func_name][src_name]
         info["body_in_train"] = body_in_train
         if tgt_type.startswith("struc") or not only_struct:
-            info["var"].append({"name": src_name.replace("@", ""), "type": src_type.replace("<unk>", "__unk__"), "ref_name": tgt_name.replace("@", ""), "ref_type": tgt_type.replace("<unk>", "__unk__")})
+            info["var"].append({"name": src_name.replace("@", ""), "type": src_type.replace("<unk>", "__unk__"), "pred_name": src_name_pred.replace("<unk>", "__unk__"), "ref_name": tgt_name.replace("@", ""), "ref_type": tgt_type.replace("<unk>", "__unk__")})
         
     return info
 
@@ -132,7 +134,8 @@ def sample(all_funcs, num, pred, ref, only_not_in_train=False, only_struct=False
         binary, func_name = random.sample(all_funcs, 1)[0]
         valid = True
         has_struc = False
-        for (src_name, src_type), (tgt_name, tgt_type, body_in_train) in zip(pred[binary][func_name], ref[binary][func_name]):
+        for src_name in pred[binary][func_name]:
+            (src_type, src_name_pred), (tgt_name, tgt_type, body_in_train) = pred[binary][func_name][src_name], ref[binary][func_name][src_name]
             if only_not_in_train and body_in_train:
                 valid = False
             if tgt_type.startswith("struc"):
@@ -152,11 +155,11 @@ if __name__ == "__main__":
     pred = json.load(open(args.pred))
     ref = json.load(open(args.ref))
     all_funcs = get_all_funcs(pred, ref)
-    sampled_funcs = sample(all_funcs, 200, pred, ref, args.not_train, args.struct)
+    sampled_funcs = sample(all_funcs, 100, pred, ref, args.not_train, args.struct)
 
     bin_mapping = pkl.load(open(args.bin_mapping, "rb"))
 
-    with Pool(processes=16) as pool:
+    with Pool(processes=1) as pool:
         ret = pool.map(
             main,
             ((func, bin_mapping.get(func[0], defaultdict(str)), args.bins_path, args.ida_output_path, args.preprocessed_path, pred, ref, args.struct) for func in sampled_funcs),
