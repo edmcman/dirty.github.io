@@ -91,7 +91,7 @@ def get_preprocessed_code(func, pred, ref, preprocessed_path, only_struct=False)
             if json_line["name"] == func_name:
                 varnames = set(name for name in pred[binary][func_name] if not only_struct or ref[binary][func_name][name][1].startswith("struc"))
                 code = json_line["code_tokens"]
-                code = map(lambda x: x[2:-2] if x.startswith("@@") and x not in varnames else x, code)
+                code = map(lambda x: x[2:-2] if x.startswith("@@") and x[2:-2] not in varnames else x, code)
                 code = " ".join(code)
                 return highlight_var(format_code(prepare_highlight_var(code)))
     return ""
