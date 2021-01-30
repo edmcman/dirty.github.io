@@ -103,7 +103,7 @@ def get_debug_code(func, ref, ida_output_path, only_struct=False):
             json_line = json.loads(line)
             if json_line["b"]["n"] == func_name:
                 code = tokenize_raw_code(json_line["b"]["c"])
-                varnames = set(name[2:-2] for name, typ, _ in ref[binary][func_name] if not only_struct or typ.startswith("struc"))
+                varnames = set(name[2:-2] for name, typ, _ in ref[binary][func_name].values() if not only_struct or typ.startswith("struc"))
                 code = map(lambda x: f"@@{x}@@" if x in varnames else x, code)
                 code = " ".join(code)
                 return highlight_var(format_code(prepare_highlight_var(code)))
@@ -114,8 +114,7 @@ def main(args):
     func, meta, bins_path, ida_output_path, preprocessed_path, pred, ref, only_struct = args
     info = get_binary_info(func, meta, bins_path)
     info["code_s"] = get_preprocessed_code(func, pred, ref, preprocessed_path, only_struct)
-    # info["code_t"] = get_debug_code(func, ref, ida_output_path, only_struct)
-    info["code_t"] = ""
+    info["code_t"] = get_debug_code(func, ref, ida_output_path, only_struct)
     info["var"] = []
     binary, func_name = func
     for src_name in pred[binary][func_name]:
@@ -142,6 +141,7 @@ def sample(all_funcs, num, pred, ref, only_not_in_train=False, only_struct=False
                 has_struc = True
         if only_struct and not has_struc:
             valid = False
+        valid = os.path.exists(os.path.join("/home/jlacomis/direoutput-new/bins", f"{binary}_{binary}.jsonl.gz"))
         if valid:
             ret.append((binary, func_name))
     return ret
