@@ -141,7 +141,7 @@ def sample(all_funcs, num, pred, ref, only_not_in_train=False, only_struct=False
                 has_struc = True
         if only_struct and not has_struc:
             valid = False
-        valid = os.path.exists(os.path.join("/home/jlacomis/direoutput-new/bins", f"{binary}_{binary}.jsonl.gz"))
+        valid &= os.path.exists(os.path.join("/home/jlacomis/direoutput-new/bins", f"{binary}_{binary}.jsonl.gz"))
         if valid:
             ret.append((binary, func_name))
     return ret
