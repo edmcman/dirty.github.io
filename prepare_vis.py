@@ -1,4 +1,5 @@
 import os
+import html
 import argparse
 import re
 import json
@@ -24,10 +25,14 @@ def add_options(parser):
 
 def get_all_funcs(pred, ref):
     all_funcs = set()
-    assert pred.keys() == ref.keys()
-    for binary in ref:
-        assert pred[binary].keys() == ref[binary].keys()
-        for func_name in ref[binary]:
+    #assert pred.keys() == ref.keys()
+    missing = set(pred.keys()) - set(ref.keys())
+    assert len(missing) == 0
+    for binary in pred:
+        missing = set(pred[binary].keys()) - set(ref[binary].keys())
+        assert len(missing) == 0
+        #assert pred[binary].keys() == ref[binary].keys()
+        for func_name in pred[binary]:
             all_funcs.add((binary, func_name))
 
     return all_funcs
@@ -59,7 +64,7 @@ def get_binary_info(func, meta, bins_path):
 
 def format_code(code):
     # Requires clang-format 
-    p = Popen("clang-format", stdout=PIPE, stdin=PIPE)
+    p = Popen("clang-format-13", stdout=PIPE, stdin=PIPE)
     ret = p.communicate(input=code.encode("utf-8"))[0]
     return ret.decode()
 
@@ -93,7 +98,7 @@ def get_preprocessed_code(func, pred, ref, preprocessed_path, only_struct=False)
                 code = json_line["code_tokens"]
                 code = map(lambda x: x[2:-2] if x.startswith("@@") and x[2:-2] not in varnames else x, code)
                 code = " ".join(code)
-                return highlight_var(format_code(prepare_highlight_var(code)))
+                return highlight_var(format_code(prepare_highlight_var(html.escape(code))))
     return ""
 
 def get_debug_code(func, ref, ida_output_path, only_struct=False):
@@ -106,7 +111,7 @@ def get_debug_code(func, ref, ida_output_path, only_struct=False):
                 varnames = set(name[2:-2] for name, typ, _ in ref[binary][func_name].values() if not only_struct or typ.startswith("struc"))
                 code = map(lambda x: f"@@{x}@@" if x in varnames else x, code)
                 code = " ".join(code)
-                return highlight_var(format_code(prepare_highlight_var(code)))
+                return highlight_var(format_code(prepare_highlight_var(html.escape(code))))
     return ""
 
 
@@ -118,11 +123,16 @@ def main(args):
     info["var"] = []
     binary, func_name = func
     for src_name in pred[binary][func_name]:
+        print(f"{binary} {func_name} {src_name}")
         (src_type, src_name_pred), (tgt_name, tgt_type, body_in_train) = pred[binary][func_name][src_name], ref[binary][func_name][src_name]
         info["body_in_train"] = body_in_train
         if tgt_type.startswith("struc") or not only_struct:
-            info["var"].append({"name": src_name.replace("@", ""), "type": src_type.replace("<unk>", "__unk__"), "pred_name": src_name_pred.replace("<unk>", "__unk__"), "ref_name": tgt_name.replace("@", ""), "ref_type": tgt_type.replace("<unk>", "__unk__")})
-        
+
+            d = {"name": src_name.replace("@", ""), "type": src_type.replace("<unk>", "__unk__"), "pred_name": src_name_pred.replace("<unk>", "__unk__"), "ref_name": tgt_name.replace("@", ""), "ref_type": tgt_type.replace("<unk>", "__unk__")}
+            for k in d.keys():
+                d[k] = html.escape(d[k])
+            info["var"].append(d)
+
     return info
 
 def sample(all_funcs, num, pred, ref, only_not_in_train=False, only_struct=False):
